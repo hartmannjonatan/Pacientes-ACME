@@ -54,13 +54,13 @@ class PacienteRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Paciente
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+   public function findCPF($cpf): ?Paciente
+   {
+       return $this->createQueryBuilder('p')
+           ->andWhere('p.CPF = :val')
+           ->setParameter('val', $cpf)
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+   }
 }

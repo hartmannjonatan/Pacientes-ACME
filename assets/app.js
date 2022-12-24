@@ -8,18 +8,16 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import '../node_modules/jquery/dist/jquery'
+import '../node_modules/bootstrap/dist/js/bootstrap.bundle'
 
 // start the Stimulus application
 import './bootstrap';
-import React from 'react'
-import ReactDOM from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-import Teste from './components/Teste';
+import Index from './components/Index';
+    
+ReactDOM.render(<Router><Index /></Router>, document.getElementById('root'));
 
-const App = () => {
-    return (
-        <Teste/>
-    )
-}
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App/>)

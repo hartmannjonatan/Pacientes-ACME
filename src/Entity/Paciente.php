@@ -30,7 +30,7 @@ class Paciente
     private ?string $Endereco = null;
 
     #[ORM\Column]
-    private ?bool $Status = null;
+    private ?bool $Status = true;
 
     public function getId(): ?int
     {

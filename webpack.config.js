@@ -11,6 +11,7 @@ Encore
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
     .setPublicPath('/build')
+    .enableReactPreset()
     // only needed for CDN's or subdirectory deploy
     //.setManifestKeyPrefix('build/')
 
@@ -61,9 +62,6 @@ Encore
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
-
-    // uncomment if you use React
-    .enableReactPreset()
 
     // uncomment to get integrity="..." attributes on your script & link tags
     // requires WebpackEncoreBundle 1.4 or higher
