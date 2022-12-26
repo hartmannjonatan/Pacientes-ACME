@@ -11,9 +11,10 @@ use App\Entity\Paciente;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Config\Doctrine;
 
+#[Route('/api', name: 'api_')]
 class IndexController extends AbstractController
 {
-    #[Route('/', name: 'app_index')]
+    #[Route('/', name: 'list', methods: ['GET'])]
     public function index(ManagerRegistry $doctrine): JsonResponse
     {
         $pacientes = $doctrine->getRepository(Paciente::class)->findAll();
@@ -67,7 +68,6 @@ class IndexController extends AbstractController
         $paciente->setCPF($request->request->get('cpf'));
         $paciente->setSexo($request->request->get('sexo'));
         $paciente->setEndereco($request->request->get('endereco'));
-        $paciente->setStatus($request->request->get('status'));
 
         
         $entityManager->flush();
@@ -78,8 +78,7 @@ class IndexController extends AbstractController
             'dataNasc' => $paciente->getDataNascimento(),
             'cpf' => $paciente->getCPF(),
             'sexo' => $paciente->getSexo(),
-            'endereco' => $paciente->getEndereco(),
-            'status' => $paciente->isStatus()
+            'endereco' => $paciente->getEndereco()
         ];
 
         return $this->json($data);
@@ -112,5 +111,53 @@ class IndexController extends AbstractController
         } else{
             return $this->json(false);
         }
+    }
+
+    #[Route('/show/{id}', methods: ['GET'], name: 'show')]
+    public function show(Request $request, ManagerRegistry $doctrine, string $id): JsonResponse
+    {
+        $entityManager = $doctrine->getManager();
+        $paciente = $entityManager->getRepository(Paciente::class)->find($id);
+
+        if(!$paciente){
+            return $this->json("Nenhum paciente encontrado com este id", 404);
+        } else{
+            $data = [
+                'id' => $paciente->getId(),
+                'nome' => $paciente->getNome(),
+                'dataNasc' => $paciente->getDataNascimento(),
+                'cpf' => $paciente->getCPF(),
+                'sexo' => $paciente->getSexo(),
+                'endereco' => $paciente->getEndereco(),
+                'status' => $paciente->isStatus()
+            ];
+            return $this->json($data);
+        }
+    }
+
+    #[Route('/changeStatus/{id}', methods: ['GET'], name: 'changeStatus')]
+    public function changeStatus(Request $request, ManagerRegistry $doctrine, int $id): JsonResponse
+    {
+        $entityManager = $doctrine->getManager();
+        $paciente = $entityManager->getRepository(Paciente::class)->find($id);
+
+        if(!$paciente){
+            return $this->json('Nenhum paciente com o ID '.$id.' foi encontrado.', 404);
+        }
+        
+        $paciente->setStatus(!$paciente->isStatus());
+
+        $entityManager->flush();
+
+        $data = [
+            'id' => $paciente->getId(),
+            'nome' => $paciente->getNome(),
+            'dataNasc' => $paciente->getDataNascimento(),
+            'cpf' => $paciente->getCPF(),
+            'sexo' => $paciente->getSexo(),
+            'endereco' => $paciente->getEndereco()
+        ];
+
+        return $this->json($data);
     }
 }
