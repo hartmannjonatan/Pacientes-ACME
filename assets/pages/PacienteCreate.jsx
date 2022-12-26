@@ -101,6 +101,7 @@ function PacienteCreate(){ //Esse componente diz respeito à página de cadastro
                                 <input required type="text" value={endereco} className='form-control' id='endereco' name='endereco' onChange={(event)=>{setEndereco(event.target.value)}}/>
                             </div>
                             <button disabled={isSaving} onClick={handleSave} type="button" className='btn btn-outline-primary mt-3'> {/* os isSaving é responsável por habilitar ou desabilitar o botão quando necessário, além disso, quaando clicado (onClick) é chamado a função handleSave */}
+                            Cadastrar
                             </button>
                         </form>
                     </div>
