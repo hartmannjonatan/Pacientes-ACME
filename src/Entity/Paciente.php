@@ -7,8 +7,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PacienteRepository::class)]
-class Paciente
+class Paciente //classe do paciente gerada via symfony flex
 {
+    //declaração de atributos com suas propriedades
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -32,6 +33,7 @@ class Paciente
     #[ORM\Column]
     private ?bool $Status = true;
 
+    //gets e sets
     public function getId(): ?int
     {
         return $this->id;

@@ -4,7 +4,8 @@ import Layout from '../components/Layout';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 
-function PacienteEdit(){
+function PacienteEdit(){ //esse componente é responsável por retornar o formulário de atualização dos registros de um paciente
+    //declarando states
     const [id, setId] = useState(useParams().id);
     const [nome, setNome] = useState('');
     const [cpf, setCpf] = useState('');
@@ -15,9 +16,11 @@ function PacienteEdit(){
     const [dataNasc, setDataNasc] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 
+    //quando o componente for renderizao (ou componente pai, ou quando seus states são alterados)
     useEffect(() => {
-        axios.get('/api/show/'+id).then(function (response){
+        axios.get('/api/show/'+id).then(function (response){ //api get recebe os dados de um paciente de acordo com seu id
             let paciente = response.data
+            //seta os states com seus respectivos dados retornados pela api
             setNome(paciente.nome);
             setCpf(paciente.cpf);
             setOldCpf(paciente.cpf);
@@ -26,6 +29,7 @@ function PacienteEdit(){
             setStatus(paciente.status);
             setDataNasc(paciente.dataNasc)
         }).catch(function (error){
+            //se houver erro é exibido um alert informando erro interno
             Swal.fire({
                 icon: 'error',
                 title: 'Ocorreu um erro interno...',
@@ -35,14 +39,15 @@ function PacienteEdit(){
         })
     }, [])
 
-    const handleSave = () =>{
+    const handleSave = () =>{ //essa constante armazena uma função que é chamada quando o botão de atualizar dados do paciente é clicado
         setIsSaving(true);
+        //seta states com respectivos valores do formulário
         setNome(document.getElementById("nome").value.toString());
         setCpf(document.getElementById("cpf").value);
         setSexo(document.getElementById("sexo").value);
         setEndereco(document.getElementById("endereco").value);
         setDataNasc(document.getElementById("dataNasc").value);
-        let formData =  new FormData()
+        let formData =  new FormData() //armazena os dados em um objeto data
         formData.append("nome", nome)
         formData.append("cpf", cpf)
         formData.append("sexo", sexo)
@@ -50,14 +55,13 @@ function PacienteEdit(){
         formData.append("endereco", endereco)
 
         let cpfValido = false;
-        if(oldCpf != cpf){
-            console.log(cpf)
+        if(oldCpf != cpf){ //verifica se o cpf está sendo atualizado
             cpfValido = false;
-            axios.get('/api/validyCPF/'+cpf).then(function (response){
+            axios.get('/api/validyCPF/'+cpf).then(function (response){ //valida o cpf
                 cpfValido = response.data
 
                 if(cpfValido){
-                    axios.post('/api/edit/'+id, formData).then(function (response){
+                    axios.post('/api/edit/'+id, formData).then(function (response){ //api envia os dados via post atualizando o paciente
                         Swal.fire({
                             icon: 'success',
                             title: 'Paciente atualizado com sucesso!',
@@ -65,7 +69,7 @@ function PacienteEdit(){
                             timer: 1500
                         })
                         setIsSaving(false);
-                        document.getElementById("btn-home").click();
+                        document.getElementById("btn-home").click(); //redireciona o usuário para a tela inicial
                     }).catch(function (error){
                         Swal.fire({
                             icon: 'error',
@@ -73,22 +77,22 @@ function PacienteEdit(){
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        console.log(error);
                         setIsSaving(false);
                     })
                 } else{
+                    //exibe alerta caso já exista paciente cadastrado com o mesmo cpf
                     Swal.fire({
                         icon: 'error',
                         title: 'Já existe um paciente cadastrado com esse cpf.',
                         showConfirmButton: false,
                         timer: 1500
                     })
-                    document.location.reload(true);
+                    document.location.reload(true); //recarrega a página permitindo o usuário atualizar novamente os dados
                 }
             })
         } else{
             cpfValido = true;
-            axios.post('/api/edit/'+id, formData).then(function (response){
+            axios.post('/api/edit/'+id, formData).then(function (response){ //envia os dados via post pela api
                 Swal.fire({
                     icon: 'success',
                     title: 'Paciente atualizado com sucesso!',
@@ -104,7 +108,6 @@ function PacienteEdit(){
                     showConfirmButton: false,
                     timer: 1500
                 })
-                console.log(error);
                 setIsSaving(false);
             })
         }
@@ -112,7 +115,7 @@ function PacienteEdit(){
         
     }
 
-    return (
+    return ( //renderiza o componente criado
         <Layout>
             <div className="container">
                 <h2 className="text-center text-light mt-5 mb-3">Atualizar registro de paciente</h2>
@@ -151,4 +154,4 @@ function PacienteEdit(){
     )
 }
 
-export default PacienteEdit;
+export default PacienteEdit; //exporta o componente PacienteEdit

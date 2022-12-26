@@ -1,5 +1,7 @@
 <?php
 
+//repositório do paciente gerado pelo doctrine
+
 namespace App\Repository;
 
 use App\Entity\Paciente;
@@ -54,7 +56,7 @@ class PacienteRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-   public function findCPF($cpf): ?Paciente
+   public function findCPF($cpf): ?Paciente //método criado para encontrar paciente pelo seu cpf
    {
        return $this->createQueryBuilder('p')
            ->andWhere('p.CPF = :val')
@@ -64,13 +66,13 @@ class PacienteRepository extends ServiceEntityRepository
        ;
    }
 
-   public function findByNome($input): array
+   public function findByNome($input): array //método criado para encontrar paciente pelo seu nome
    {
        $conn = $this->getEntityManager()->getConnection();
 
-       $input = '%'.$input.'%';
+       $input = '%'.$input.'%'; //é encontrado qualquer cliente que possua em seu nome o valor input (seja no começo, meio ou fim)
 
-       $sql = "SELECT * FROM paciente p WHERE p.nome LIKE :input";
+       $sql = "SELECT * FROM paciente p WHERE p.nome LIKE :input"; //query manual
 
        $stmt = $conn->prepare($sql);
        $resultSet = $stmt->executeQuery(['input' => $input]);

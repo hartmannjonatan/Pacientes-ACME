@@ -1,7 +1,9 @@
+/* Estilos simples utilizados no geral (o resto foi utilizando as classes disponíveis pelo framework bootstrap */
+
 body {
     background-color: #435159;
 }
 
 .headerSearch{
-    flex-wrap: nowrap !important;
+    flex-wrap: nowrap !important; /* Para sobrescrever o estilo do bootstrap, permitindo deixar o campo de pesquisa e o outro botão lado a lado */
 }

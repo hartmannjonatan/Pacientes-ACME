@@ -1,9 +1,4 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
+/* Esse arquivo contém toda a importação de js (e jsx) utilizado, é o js principal */
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
@@ -21,15 +16,16 @@ import PacienteRead from './pages/PacienteRead'
 import PacienteCreate from './pages/PacienteCreate'
 import PacienteEdit from './pages/PacienteEdit';
 
+//a const main é responsável por renderizar os componentes corretos de acordo com a rota acessada pelo usuário
 const main = (
     <Router>
         <Routes>
-            <Route exact path='/' element={<PacienteRead/>} />
-            <Route path='/create' element={<PacienteCreate/>} />
-            <Route path='/edit/:id' element={<PacienteEdit/>} />
+            <Route exact path='/' element={<PacienteRead/>} /> {/* Renderiza a página inicial */}
+            <Route path='/create' element={<PacienteCreate/>} /> {/* Renderiza o formulário de cadastro */}
+            <Route path='/edit/:id' element={<PacienteEdit/>} /> {/* Renderiza o formulário de atualização */}
         </Routes>
     </Router>
 )
 
-ReactDOM.render(main, document.getElementById('app'));
+ReactDOM.render(main, document.getElementById('app')); //renderiza o componente main dentro da div "app" do html padrão
 
