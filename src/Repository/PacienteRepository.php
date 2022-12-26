@@ -63,4 +63,19 @@ class PacienteRepository extends ServiceEntityRepository
            ->getOneOrNullResult()
        ;
    }
+
+   public function findByNome($input): array
+   {
+       $conn = $this->getEntityManager()->getConnection();
+
+       $input = '%'.$input.'%';
+
+       $sql = "SELECT * FROM paciente p WHERE p.nome LIKE :input";
+
+       $stmt = $conn->prepare($sql);
+       $resultSet = $stmt->executeQuery(['input' => $input]);
+
+       $array = array($resultSet->fetchAllAssociative());
+       return $array;
+   }
 }

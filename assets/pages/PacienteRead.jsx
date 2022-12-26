@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Component} from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Swal from 'sweetalert2';
@@ -6,6 +6,8 @@ import axios from 'axios';
 
 function PacienteRead(){
     const [pacienteList, setPacienteList] = useState([])
+    const [pacienteSearch, setPacienteSearch] = useState([])
+    const [lista, setLista] = useState([]);
 
     useEffect(() => {
         fetchPacienteList()
@@ -14,6 +16,7 @@ function PacienteRead(){
     const fetchPacienteList = () => {
         axios.get('/api/').then(function (response) {
             setPacienteList(response.data);
+            setLista(response.data)
         }).catch(function (error) {
             console.log(error);
         })
@@ -63,13 +66,46 @@ function PacienteRead(){
         })
     }
 
+    const handleSearch = () => {
+        NodeList.prototype.forEach = Array.prototype.forEach
+        const childs = document.getElementById("tbody").childNodes;
+        childs.forEach(function(item){
+            item.display = 'none'
+        });
+        let formData =  new FormData()
+        formData.append('input', document.getElementById('search').value)
+        axios.post('/api/searchName/', formData).then(function (response){
+            let pacienteSearch = response.data;
+            pacienteSearch = pacienteSearch[0];
+            setPacienteSearch(pacienteSearch);
+            setLista(pacienteSearch);
+
+        }).catch(function (error){
+            Swal.fire({
+                icon: 'error',
+                title: 'Ocorreu um erro interno!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            console.log(error)
+        })
+        setPacienteSearch([])
+        setLista(pacienteSearch)
+    }
+
     return (
         <Layout>
             <div className="container-fluid">
                 <h2 className="text-center mt-5 mb-3 text-light">Pacientes ACME</h2>
                 <div className="card">
-                    <div className="card-header">
-                        <Link className='btn btn-outline-primary' to="/create">Cadastrar Paciente</Link>
+                    <div className="row p-2 d-flex justify-content-start headerSearch">
+                        <Link className='col-2 mx-3 btn btn-outline-primary' to="/create">Cadastrar Paciente</Link>
+                        <div className="col-8">
+                            <form className="form-inline my-2 my-lg-0 row">
+                                <div className="col-6"><input id='search' className="form-control mr-sm-2" type="search" placeholder="Pesquise pelo nome do paciente..." aria-label="Pesquisar" /></div>
+                                <div className="col-6"><button onClick={(event) => {event.preventDefault(); handleSearch();}} className="btn btn-outline-success my-2 my-sm-0">Pesquisar</button></div>
+                            </form>
+                        </div>
                     </div>
                     <div className="card-body">
                         <table className="table table-responsive table-bordered table-light table-hover">
@@ -84,33 +120,35 @@ function PacienteRead(){
                                 <th scope="col" width="240px">Ação</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {pacienteList.map((paciente, key) => {
-                                    paciente.status = paciente.status ? "Ativo" : "Inativo";
-                                    return (
-                                        <tr key={key}>
-                                            <td>{paciente.nome}</td>
-                                            <td>{paciente.dataNasc}</td>
-                                            <td>{paciente.cpf}</td>
-                                            <td>{paciente.sexo}</td>
-                                            <td>{paciente.endereco}</td>
-                                            <td>
-                                                <span className='mx-1'>{paciente.status}</span>
-                                                <button onClick={() => handleChangeStatus(paciente.id)} className="btn btn-outline-primary mx-1">
-                                                    Alterar
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <Link to={'/edit/'+paciente.id} className="btn btn-outline-success mx-1">
-                                                    Editar
-                                                </Link>
-                                                <button onClick={() => handleDelete(paciente.id)} className="btn btn-outline-danger mx-1">
-                                                    Deletar
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
+                            <tbody id="tbody">
+                                {
+                                    lista.map((paciente, key) => {
+                                        paciente.status = paciente.status ? "Ativo" : "Inativo";
+                                        return(
+                                            <tr key={key}>
+                                                <td>{paciente.nome}</td>
+                                                <td>{paciente.dataNasc ? paciente.dataNasc: paciente.data_nascimento}</td>
+                                                <td>{paciente.cpf}</td>
+                                                <td>{paciente.sexo}</td>
+                                                <td>{paciente.endereco}</td>
+                                                <td>
+                                                    <span className='mx-1'>{paciente.status}</span>
+                                                    <button onClick={() => handleChangeStatus(paciente.id)} className="btn btn-outline-primary mx-1">
+                                                        Alterar
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <Link to={'/edit/'+paciente.id} className="btn btn-outline-success mx-1">
+                                                        Editar
+                                                    </Link>
+                                                    <button onClick={() => handleDelete(paciente.id)} className="btn btn-outline-danger mx-1">
+                                                        Deletar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
                             </tbody>
                         </table>
                     </div>

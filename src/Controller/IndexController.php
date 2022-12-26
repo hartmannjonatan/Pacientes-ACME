@@ -160,4 +160,17 @@ class IndexController extends AbstractController
 
         return $this->json($data);
     }
+
+    #[Route('/searchName/', methods: ['POST'], name: 'searchName')]
+    public function searchName(Request $request, ManagerRegistry $doctrine): JsonResponse
+    {
+        $entityManager = $doctrine->getManager();
+        $pacientes = $entityManager->getRepository(Paciente::class)->findByNome($request->request->get('input'));
+
+        if(!$pacientes){
+            return $this->json(null);
+        }
+
+        return $this->json($pacientes);
+    }
 }
