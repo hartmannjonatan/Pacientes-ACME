@@ -13,7 +13,7 @@ Essas instruções permitirão que você obtenha uma cópia do projeto em opera�
 ### 📋Pré-requisitos
 - [Composer](https://getcomposer.org/download/)
 - [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)
-- [php vs. 8.0.8](https://www.php.net/downloads.php]
+- [php vs. 8.0.8](https://www.php.net/downloads.php)
 - [MySQL](https://www.mysql.com/downloads/)
 - Acesse seu SGBD e crie um novo banco de dados com o nome "acme"
 
@@ -33,6 +33,22 @@ composer install
 ```
 > Neste será necessário uma confirmação digitando "yes" e pressionando enter;
 
+#### Configurando o banco de dados
+
+Altere o arquivo ".env" na raiz do projeto editando a variável "DATABASE_URL" para:
+
+```
+mysql://link de acesso ao seu BD/acme"
+```
+(o link será algo como: "root@127.0.0.1:3306" se for local)
+
+Abra o diretório raiz no terminal e execute o seguinte comando:
+```
+php bin/console doctrine:migrations:migrate
+```
+
+#### Instalando/iniciando dependências
+Execute os seguintes comandos no terminal (no diretório principal do projeto):
 ```
 yarn install
 ```
@@ -41,6 +57,8 @@ yarn install
 yarn encore dev
 ```
 
+### :arrow_forward: Executando
+Execute o seguinte comando no terminal:
 ```
 symfony server:start
 ```
